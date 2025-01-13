@@ -67,7 +67,7 @@ class DataLoader:
                     'symbol': symbol,
                     'period': period_dict[interval]
             }}
-            if verbose: print(f"\tWysyłam zapytanie do API...", end=' ')
+            if verbose: print(f"\tWysyłam zapytanie do API...")
             response = self.client.commandExecute('getChartRangeRequest', arguments=args)
             finalData[symbol] = XTB_to_pandas(response)
         
