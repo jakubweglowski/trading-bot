@@ -13,7 +13,7 @@ period_dict = {
     '1M': 43200
 }
 
-from xAPIConnector.xAPIConnector import *
+from DataLoader.xAPIConnector import *
 
 def XTB_to_pandas(response):
     data = pd.DataFrame.from_dict(response['returnData']['rateInfos'])
