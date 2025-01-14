@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as tmd
 
 period_dict = {
     '1min': 1,
@@ -57,7 +57,7 @@ class DataLoader:
         
         end_date = (dt.strptime(end_date, '%Y-%m-%d %H:%M:%S') if end_date is not None else dt.now())
         endUNIXTIME = int(dt.timestamp(end_date) * 1000)
-        start_date = dt.strptime(start_date, '%Y-%m-%d %H:%M:%S')
+        start_date = dt.strptime(start_date, '%Y-%m-%d %H:%M:%S') + tmd(days=-1)
         startUNIXTIME = int(dt.timestamp(start_date) * 1000)
         
         for symbol in symbols:
