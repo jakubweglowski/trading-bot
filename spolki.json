@@ -1,10 +1,10 @@
 { 
  "gold":{
-    "NEM":"Newmont Corporation",
-    "AU" :"AngloGold Ashanti plc",
-    "RGLD":"Royal Gold, Inc.",
-    "CDE":"Coeur Mining, Inc.",
-    "SA":"Seabridge Gold Inc.",
+    "NEM": "Newmont Corporation",
+    "AU" : "AngloGold Ashanti plc",
+    "RGLD": "Royal Gold, Inc.",
+    "CDE": "Coeur Mining, Inc.",
+    "SA": "Seabridge Gold Inc.",
     "CMCL": "Caledonia Mining Corporation Plc",
     "IDR" : "Idaho Strategic Resources, Inc.",
     "CTGO" : "Contango Ore, Inc.",

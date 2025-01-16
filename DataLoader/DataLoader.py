@@ -51,8 +51,6 @@ class DataLoader:
                 interval: str = '1min',
                 verbose: bool = True):
         
-        self.connect(verbose)
-        
         finalData = {}
         
         end_date = (dt.strptime(end_date, '%Y-%m-%d %H:%M:%S') if end_date is not None else dt.now())
@@ -61,16 +59,34 @@ class DataLoader:
         startUNIXTIME = int(dt.timestamp(start_date) * 1000)
         
         for symbol in symbols:
-            args = {'info': {
-                    'end': endUNIXTIME,
-                    'start': startUNIXTIME,
-                    'symbol': symbol,
-                    'period': period_dict[interval]
-            }}
-            if verbose: print(f"\tWysyłam zapytanie do API...")
-            response = self.client.commandExecute('getChartRangeRequest', arguments=args)
-            finalData[symbol] = XTB_to_pandas(response)
+            
+            self.connect(verbose)
+            
+            try:
+                args = {'info': {
+                        'end': endUNIXTIME,
+                        'start': startUNIXTIME,
+                        'symbol': symbol,
+                        'period': period_dict[interval]
+                }}
+                if verbose: print(f"\tWysyłam zapytanie do API...")
+                response = self.client.commandExecute('getChartRangeRequest', arguments=args)
+                finalData[symbol] = XTB_to_pandas(response)
+            except:
+                try:
+                    args = {'info': {
+                            'end': endUNIXTIME,
+                            'start': startUNIXTIME,
+                            'symbol': symbol+'_4',
+                            'period': period_dict[interval]
+                    }}
+                    if verbose: print(f"\tWysyłam zapytanie do API...")
+                    response = self.client.commandExecute('getChartRangeRequest', arguments=args)
+                    finalData[symbol] = XTB_to_pandas(response)
+                except:
+                    print(f"[BŁĄD] Nie pobrano {symbol}")
+                    continue
         
-        self.disconnect(verbose)
+            self.disconnect(verbose)
         
         return pd.DataFrame(finalData)
