@@ -61,21 +61,24 @@ def backtest_strategy(data: pd.DataFrame,
                       price_col: str, 
                       sl_col: str,
                       tp_col: str,
-                      signal_col: str):
+                      signal_col: str,
+                      size: str):
     trades = []  
     position = None 
     entry_price = None 
     entry_index = None
-
+    entry_size = None
     for i in range(len(data)):
         current_signal = data.loc[data.index[i], signal_col]
         current_price = data.loc[data.index[i], price_col]
+        current_size = data.loc[data.index[i], size]
+
         sl_price = data.loc[data.index[i], sl_col]
         tp_price = data.loc[data.index[i], tp_col]
 
         if position == 'long':
             if sl_price:
-                pnl = current_price - entry_price
+                pnl = entry_size * (current_price - entry_price)
                 trades.append({
                     'entry_index': entry_index,
                     'exit_index': data.index[i],
@@ -86,7 +89,7 @@ def backtest_strategy(data: pd.DataFrame,
                 })
                 position = None
             elif tp_price:
-                pnl = current_price - entry_price
+                pnl = entry_size * (current_price - entry_price)
                 trades.append({
                     'entry_index': entry_index,
                     'exit_index': data.index[i],
@@ -99,7 +102,7 @@ def backtest_strategy(data: pd.DataFrame,
 
         elif position == 'short':
             if sl_price:
-                pnl = entry_price - current_price
+                pnl = entry_size * (entry_price - current_price)
                 trades.append({
                     'entry_index': entry_index,
                     'exit_index': data.index[i],
@@ -110,7 +113,7 @@ def backtest_strategy(data: pd.DataFrame,
                 })
                 position = None
             elif tp_price:
-                pnl = entry_price - current_price
+                pnl = entry_size * (entry_price - current_price)
                 trades.append({
                     'entry_index': entry_index,
                     'exit_index': data.index[i],
@@ -125,6 +128,7 @@ def backtest_strategy(data: pd.DataFrame,
             position = 'long' if current_signal == 1 else 'short'
             entry_price = current_price
             entry_index = data.index[i]
+            entry_size = current_size
 
     trades_data = pd.DataFrame(trades)
     return trades_data
