@@ -1,6 +1,7 @@
 import pandas as pd
 from TechFunctions.StatisticalFunctions import SMA, EMA
 from TechFunctions.Technicalities import position
+from Data.SymbolParser import materials
 
 class MACD:
     def __init__(self, 
@@ -10,7 +11,7 @@ class MACD:
                  signal_window: int = 9,
                  exponential: bool = True,
                  alpha_EMA: float = 0.1):
-        self.data = data
+        self.data = data.loc[:, [col for col in data.columns if col not in materials]]
         self.short_window = short_window
         self.long_window = long_window
         self.signal_window = signal_window

@@ -1,11 +1,9 @@
 import pandas as pd
 from datetime import datetime as dt, timedelta as tmd
 from TechFunctions.Technicalities import XTB_to_pandas, period_dict
+from Data.SymbolParser import materials
 
 from DataLoader.xAPIConnector import *
-from Data.SymbolParser import parse_symbols
-
-materials = [key.upper() for key in parse_symbols().keys()]
 
 def XTB_to_pandas(response):
     data = pd.DataFrame.from_dict(response['returnData']['rateInfos'])

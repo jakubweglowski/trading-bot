@@ -1,5 +1,6 @@
 import pandas as pd
 from TechFunctions.TrendMeasures import rsi
+from Data.SymbolParser import materials
 
 def clean_rsi_decision(x: pd.Series):
     if x.iloc[0] == x.iloc[1]: return 0
@@ -11,7 +12,7 @@ class RSI:
                  window: int = 26,
                  sell_signal: float = 70.0,
                  buy_signal: float = 30.0):
-        self.data = data
+        self.data = data.loc[:, [col for col in data.columns if col not in materials]]
         self.window = window
         self.sell_signal = sell_signal
         self.buy_signal = buy_signal

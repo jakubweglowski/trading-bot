@@ -9,3 +9,5 @@ def parse_symbols():
         symbols[key] = [key+'.US' for key in data[key].keys()]
     
     return symbols
+
+materials = [key.upper() for key in parse_symbols().keys()]
