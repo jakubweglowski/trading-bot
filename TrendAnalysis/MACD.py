@@ -39,3 +39,7 @@ class MACD:
         decision = UpwardTrend.apply(lambda col:
             col.rolling(2).apply(lambda x: position(x)))
         return decision.fillna(0.0)
+    
+    def saveDecision(self,
+                     filename: str):
+        self.Decision().to_csv('Data/Signals/'+filename+'.csv', index=False)

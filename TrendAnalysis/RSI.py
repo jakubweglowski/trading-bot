@@ -33,3 +33,7 @@ class RSI:
         decision = SellSignal + WaitSignal + BuySignal
         decision = decision.rolling(2).apply(clean_rsi_decision)
         return decision.fillna(0.0)
+    
+    def saveDecision(self,
+                     filename: str):
+        self.Decision().to_csv('Data/Signals/'+filename+'.csv', index=False)

@@ -84,3 +84,7 @@ class MeanRevert:
         self.data['cum_pnl'] = self.data['pnl'].cumsum()
 
         return self.data
+    
+    def saveDecision(self,
+                     filename: str):
+        self.Decision().to_csv('Data/Signals/'+filename+'.csv', index=False)
