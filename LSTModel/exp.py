@@ -107,4 +107,19 @@ class Exp:
         Y_test=np.concatenate((np.array(X_test)[:,:,0],predicted), axis=1)
         Y_test=self.scaler.inverse_transform(Y_test)
         return Y_test[:,-1]
+    
+    def signaling(self,X_test,granica):
+        
+        Y_pred=self.test(X_test)
+        sygnaly=[]
+     
+        for i in range(len(Y_pred)):
+            if Y_pred[i]>(1+granica)*X_test[i,-1]:
+                sygnaly.append(1)
+            elif Y_pred[i]<(1-granica)*X_test[i,-1]:
+                sygnaly.append(-1)
+            else:
+                sygnaly.append(0)
+                
+        return sygnaly
         
