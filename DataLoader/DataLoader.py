@@ -70,7 +70,7 @@ class DataLoader:
                     args = {'info': {
                             'end': endUNIXTIME,
                             'start': startUNIXTIME,
-                            'symbol': symbol+'_4',
+                            'symbol': symbol+'_9',
                             'period': period_dict[interval]
                     }}
                     if verbose: print(f"\tWysyłam zapytanie do API...")
