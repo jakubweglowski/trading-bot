@@ -105,6 +105,6 @@ class Exp:
             predicted = self.model(X_test.to(self.device)).to(self.device).numpy()
             
         Y_test=np.concatenate((np.array(X_test)[:,:,0],predicted), axis=1)
-        Y_test=scaler.inverse_transform(Y_test)
+        Y_test=self.scaler.inverse_transform(Y_test)
         return Y_test[:,-1]
         
