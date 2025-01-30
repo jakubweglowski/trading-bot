@@ -7,7 +7,7 @@ import io
 
 app = Flask(__name__)
 
-with open('news_data.json', 'r') as file:
+with open('data/news_data.json', 'r') as file:
     news_data = json.load(file)
 
 @app.route('/')
@@ -97,7 +97,15 @@ def plot_commodity(commodity):
     fig = px.line(df, x='Date', y='Price',
                   markers=True, line_shape='linear')
 
-    fig.update_traces(line=dict(color='gold'))
+    if commodity == "Gold":
+        fig.update_traces(line=dict(color='gold'))
+    if commodity == "Silver":
+        fig.update_traces(line=dict(color='silver'))
+    if commodity == "Copper":
+        fig.update_traces(line=dict(color='orangered'))
+    if commodity == "Aluminium":
+        fig.update_traces(line=dict(color='silver'))
+
     fig.update_layout(xaxis_title="Date", yaxis_title="Price",
                       template="plotly_white", margin=dict(l=40, r=40, t=40, b=40))
 
@@ -118,20 +126,20 @@ def plot_strategy(commodity, strategy):
 
     df = pd.read_csv(strategy_file)
 
-    if 'Date' not in df.columns:
+    if 'entry_index' not in df.columns:
         print(df.columns)
-        return "No Date in strategy file", 500
-    if 'PNL' not in df.columns:
+        return "No entry_index in strategy file", 500
+    if 'pnl' not in df.columns:
         print(df.columns)
-        return "No PNL column in strategy file", 500
+        return "No pnl column in strategy file", 500
     
-    df['Date'] = df['Date'].astype(str)
-
-    fig = px.line(df, x='Date', y='PNL', title=f'{commodity} Strategy {strategy} PNL',
+    df['entry_index'] = df['entry_index'].astype(str)
+    df['cum_pnl'] = df['pnl'].cumsum()
+    fig = px.line(df, x='entry_index', y='cum_pnl', title=f'{commodity} Strategy {strategy} pnl',
                   markers=True, line_shape='linear')
 
     fig.update_traces(line=dict(color='blue'))
-    fig.update_layout(xaxis_title="Date", yaxis_title="PNL",
+    fig.update_layout(xaxis_title="Date", yaxis_title="pnl",
                       template="plotly_white", margin=dict(l=40, r=40, t=40, b=40))
 
     img = io.BytesIO()

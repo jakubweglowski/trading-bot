@@ -17,13 +17,18 @@ for commodity in SYMBOLS.keys():
     data = dl.getData(symbols=symbols, start_date=start, interval=interval, verbose=False)
     data = data.dropna()
 
+    commodity_price = data[[commodity.upper()]]
+    commodity_price.columns = ['Price']
+    commodity_price.index.name = 'Date'
+    commodity_price.to_csv(f'App/data/{commodity.capitalize()}/spot_price.csv')
+
     for col in data.columns[:-4]:
         mean_revert = MeanRevert(data, col)
         mean_revert.getSignal()
         backtest_df = mean_revert.getBacktest()
-        backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_mean_revert.csv')
+        backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_mean_revert.csv', index=False)
 
         mean_revert = MeanRevertPairs(data, col, commodity.upper())
         mean_revert.getSignal()
         backtest_df = mean_revert.getBacktest()
-        backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_vs_silver_mean_revert.csv')
+        backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_vs_silver_mean_revert.csv', index=False)
