@@ -9,6 +9,8 @@ from MeanRevert.MeanRevert import MeanRevert, MeanRevertPairs
 
 SYMBOLS = parse_symbols()
 
+results = pd.DataFrame(columns=['company', 'commodity', 'strategy', 'mean_std', 'win_rate'])
+i = 0
 for commodity in SYMBOLS.keys():
     symbols = SYMBOLS[commodity]
     start, interval = '2010-01-01', '1D'
@@ -28,7 +30,16 @@ for commodity in SYMBOLS.keys():
         backtest_df = mean_revert.getBacktest()
         backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_mean_revert.csv', index=False)
 
+        results.loc[i] = [col, commodity, 'base', backtest_df.pnl.mean() / backtest_df.pnl.std(), (backtest_df.pnl.mean()>0).mean()]
+        i += 1
+
         mean_revert = MeanRevertPairs(data, col, commodity.upper())
         mean_revert.getSignal()
         backtest_df = mean_revert.getBacktest()
-        backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_vs_silver_mean_revert.csv', index=False)
+        backtest_df.to_csv(f'App/data/{commodity.capitalize()}/{col[:-3].lower()}_vs_{commodity.lower()}_mean_revert.csv', index=False)
+
+        results.loc[i] = [col, commodity, 'vs', backtest_df.pnl.mean() / backtest_df.pnl.std(), (backtest_df.pnl>0).mean()]
+        i += 1
+        
+
+results.to_csv('results.csv')
