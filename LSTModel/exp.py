@@ -3,7 +3,8 @@ import torch.nn as nn
 import numpy as np
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
-from LSTModel.LSTM import LSTM
+from LSTM import LSTM
+from data_prepare import prepare_data_for_LSTM
 
 class TimeSeriesDataset(Dataset):
     def __init__(self, X, y):
@@ -34,7 +35,7 @@ class Exp:
         self.loss_function = nn.MSELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         
-        X_train,y_train,X_test,y_test=prepare_data_for_LSTM(data,window,skip,split)
+        X_train,y_train,X_test,y_test,self.scaler=prepare_data_for_LSTM(data,window,skip,split)
         
         self.train_dataset = TimeSeriesDataset(X_train, y_train)
         self.test_dataset = TimeSeriesDataset(X_test, y_test)
@@ -88,4 +89,22 @@ class Exp:
             self.train_one_epoch(epoch)
             self.validate_one_epoch(epoch)
         
-        return self.model
+        return self.model,self.scaler
+    
+    def test(self,X_test):
+        X_test=np.array(X_test)
+        srednie=np.mean(X_test,axis=1)
+        X_test=X_test[:,:,0]
+        X_test=np.concatenate((srednie, X_test), axis=1)
+        X_test=self.scaler.transform(X_test)
+        X_test=X_test.reshape(-1,self.window,1)
+        X_test=X_test[:,1:,:]
+        X_test=torch.Tensor(X_test)
+        
+        with torch.no_grad():
+            predicted = self.model(X_test.to(self.device)).to(self.device).numpy()
+            
+        Y_test=np.concatenate((np.array(X_test)[:,:,0],predicted), axis=1)
+        Y_test=scaler.inverse_transform(Y_test)
+        return Y_test[:,-1]
+        
