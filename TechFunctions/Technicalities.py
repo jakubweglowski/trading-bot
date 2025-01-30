@@ -57,37 +57,39 @@ def prepare_data_for_LSTM(data: pd.Series, window: int, skip: int) -> tuple:
         
     return np.array(X)
 
-import pandas as pd
-
-def backtest_strategy(df, price_col, sl_col, tp_col, signal_col):
+def backtest_strategy(data: pd.DataFrame,
+                      price_col: str, 
+                      sl_col: str,
+                      tp_col: str,
+                      signal_col: str):
     trades = []  
     position = None 
     entry_price = None 
     entry_index = None
 
-    for i in range(len(df)):
-        current_signal = df.loc[df.index[i], signal_col]
-        current_price = df.loc[df.index[i], price_col]
-        sl_price = df.loc[df.index[i], sl_col]
-        tp_price = df.loc[df.index[i], tp_col]
+    for i in range(len(data)):
+        current_signal = data.loc[data.index[i], signal_col]
+        current_price = data.loc[data.index[i], price_col]
+        sl_price = data.loc[data.index[i], sl_col]
+        tp_price = data.loc[data.index[i], tp_col]
 
         if position == 'long':
-            if current_price <= sl_price:
+            if sl_price:
                 pnl = current_price - entry_price
                 trades.append({
                     'entry_index': entry_index,
-                    'exit_index': df.index[i],
+                    'exit_index': data.index[i],
                     'entry_price': entry_price,
                     'exit_price': current_price,
                     'pnl': pnl,
                     'reason': 'Stop-loss hit'
                 })
                 position = None
-            elif current_price >= tp_price:
+            elif tp_price:
                 pnl = current_price - entry_price
                 trades.append({
                     'entry_index': entry_index,
-                    'exit_index': df.index[i],
+                    'exit_index': data.index[i],
                     'entry_price': entry_price,
                     'exit_price': current_price,
                     'pnl': pnl,
@@ -96,22 +98,22 @@ def backtest_strategy(df, price_col, sl_col, tp_col, signal_col):
                 position = None
 
         elif position == 'short':
-            if current_price >= sl_price:
+            if sl_price:
                 pnl = entry_price - current_price
                 trades.append({
                     'entry_index': entry_index,
-                    'exit_index': df.index[i],
+                    'exit_index': data.index[i],
                     'entry_price': entry_price,
                     'exit_price': current_price,
                     'pnl': pnl,
                     'reason': 'Stop-loss hit'
                 })
                 position = None
-            elif current_price <= tp_price:
+            elif tp_price:
                 pnl = entry_price - current_price
                 trades.append({
                     'entry_index': entry_index,
-                    'exit_index': df.index[i],
+                    'exit_index': data.index[i],
                     'entry_price': entry_price,
                     'exit_price': current_price,
                     'pnl': pnl,
@@ -122,7 +124,7 @@ def backtest_strategy(df, price_col, sl_col, tp_col, signal_col):
         if position is None and current_signal != 0:
             position = 'long' if current_signal == 1 else 'short'
             entry_price = current_price
-            entry_index = df.index[i]
+            entry_index = data.index[i]
 
-    trades_df = pd.DataFrame(trades)
-    return trades_df
+    trades_data = pd.DataFrame(trades)
+    return trades_data
