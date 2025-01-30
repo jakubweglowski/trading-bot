@@ -1,6 +1,10 @@
 import pandas as pd
 from TechFunctions.TrendMeasures import rsi
 
+def clean_rsi_decision(x: pd.Series):
+    if x.iloc[0] == x.iloc[1]: return 0
+    else: return x.iloc[1]
+    
 class RSI:
     def __init__(self, 
                  data: pd.DataFrame,
@@ -22,4 +26,5 @@ class RSI:
         WaitSignal = ((RSIndex > 30) & (RSIndex < 70))*(1.0)
         
         decision = SellSignal + WaitSignal + BuySignal
-        return decision
+        decision = decision.rolling(2).apply(clean_rsi_decision)
+        return decision.fillna(0.0)
