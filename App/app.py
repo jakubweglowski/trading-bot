@@ -2,19 +2,13 @@ from flask import Flask, render_template, send_file, request
 import pandas as pd
 import os
 import plotly.express as px
+import json
 import io
 
 app = Flask(__name__)
 
-news_data = {
-    "Gold": [
-        {"title": "Gold prices hit record high", "link": "#"},
-        {"title": "Investors flock to gold amid uncertainty", "link": "#"},
-        {"title": "Central banks increase gold reserves", "link": "#"},
-        {"title": "Gold mining stocks surge", "link": "#"},
-        {"title": "Gold ETFs see record inflows", "link": "#"}
-    ]
-}
+with open('news_data.json', 'r') as file:
+    news_data = json.load(file)
 
 @app.route('/')
 def index():
