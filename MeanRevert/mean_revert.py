@@ -15,9 +15,6 @@ class Mean_Revert:
         self.tp = tp
     
     def get_signal(self, price_col: str):
-        """
-        Generates trading signals based on mean reversion strategy.
-        """
         self.data['rolling_mean'] = self.data[price_col].rolling(window=self.roll).mean()
         self.data['rolling_std'] = self.data[price_col].rolling(window=self.roll).std()
         
