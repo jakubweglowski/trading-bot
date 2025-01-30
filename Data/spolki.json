@@ -17,18 +17,11 @@
      "MTAL" : "MAC Copper Limited",
      "IE" : "Ivanhoe Electric Inc."
  },
- "aluminum":{
+ "aluminium":{
      "AA" :"Alcoa Corporation",
      "CENX" : "Century Aluminum Company",
      "CSTM" : "Constellium SE",
      "KALU" : "Kaiser Aluminum Corporation"
- },
- "coal":{
-     "HCC" :"Warrior Met Coal, Inc.",
-     "AMR" :"Alpha Metallurgical Resources, Inc.",
-     "ARCH" :"Arch Resources, Inc.",
-     "SXC" :"SunCoke Energy, Inc.",
-     "METC" :"Ramaco Resources, Inc."
  },
   "silver":{
     "AG":"First Majestic Silver Corp.",
