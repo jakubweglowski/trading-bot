@@ -13,6 +13,12 @@ period_dict = {
     '1M': 43200
 }
 
+position_encoding ={
+    0: 'hold',
+    1: 'buy',
+    -1: 'sell'
+}
+
 def XTB_to_pandas(response):
     data = pd.DataFrame.from_dict(response['returnData']['rateInfos'])
     digits = response['returnData']['digits']
@@ -25,7 +31,7 @@ def XTB_to_pandas(response):
 
     return data
 
-def position(x):
-    if x[0] == True and x[1] == False: return -1
-    elif x[0] == False and x[1] == True: return 1
+def position(x: pd.Series):
+    if x.iloc[0] == True and x.iloc[1] == False: return -1
+    elif x.iloc[0] == False and x.iloc[1] == True: return 1
     else: return 0
