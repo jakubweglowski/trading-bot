@@ -35,3 +35,23 @@ def position(x: pd.Series):
     if x.iloc[0] == True and x.iloc[1] == False: return -1
     elif x.iloc[0] == False and x.iloc[1] == True: return 1
     else: return 0
+    
+def prepare_data_for_LSTM(data: pd.Series, window: int, skip: int) -> tuple:   
+    # można ustawić okna zachodzące (0 < skip < window)
+    # można ustawić niezachodzące (skip >= window)
+    assert skip > 0, "Pętla w kodzie nigdy się nie zakończy..."
+    
+    # Generujemy 'okna'
+    X = pd.DataFrame(columns=range(window))
+    
+    i = len(data)
+    count = 0
+    while i >= window:
+        temp_y = data.iloc[i-window:i]
+        
+        X.loc[count, :] = temp_y.values
+        
+        i = i - skip    
+        count += 1
+        
+    return np.array(X)
