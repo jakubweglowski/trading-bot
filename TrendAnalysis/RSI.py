@@ -8,9 +8,13 @@ def clean_rsi_decision(x: pd.Series):
 class RSI:
     def __init__(self, 
                  data: pd.DataFrame,
-                 window: int = 26):
+                 window: int = 26,
+                 sell_signal: float = 70.0,
+                 buy_signal: float = 30.0):
         self.data = data
         self.window = window
+        self.sell_signal = sell_signal
+        self.buy_signal = buy_signal
         
     def compute_index(self):
         RSIndex = self.data.apply(lambda col:
@@ -21,9 +25,9 @@ class RSI:
     def Decision(self):
         RSIndex = self.compute_index()
         
-        SellSignal = (RSIndex >= 70)*(-1.0)
-        BuySignal = (RSIndex <= 30)*(1.0)
-        WaitSignal = ((RSIndex > 30) & (RSIndex < 70))*(1.0)
+        SellSignal = (RSIndex >= self.sell_signal)*(-1.0)
+        BuySignal = (RSIndex <= self.sell_signal)*(1.0)
+        WaitSignal = ((RSIndex > self.buy_signal) & (RSIndex < self.sell_signal))*(1.0)
         
         decision = SellSignal + WaitSignal + BuySignal
         decision = decision.rolling(2).apply(clean_rsi_decision)
