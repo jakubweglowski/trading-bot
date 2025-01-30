@@ -1,0 +1,42 @@
+{ 
+ "gold":{
+    "NEM": "Newmont Corporation",
+    "AU" : "AngloGold Ashanti plc",
+    "RGLD": "Royal Gold, Inc.",
+    "CDE": "Coeur Mining, Inc.",
+    "HYMC": "Hycroft Mining Holding Corporation",
+    "GOLD": "Barrick Gold",
+    "GFI": "Gold Fields",
+    "FCX": "Freeport-McMoRan"
+},
+ "copper":{
+    "SCCO" :"Southern Copper Corporation",
+    "FCX" : "Freeport-McMoRan Inc.",
+    "BHP": "BHP Group",
+    "RIO": "Rio Tinto",
+    "IE" : "Ivanhoe Electric Inc."
+ },
+ "aluminium":{
+     "AA" :"Alcoa Corporation",
+     "KALU" : "Kaiser Aluminum Corporation",
+     "BHP": "BHP Group",
+     "RIO": "Rio Tinto"
+ },
+  "silver":{
+    "AG":"First Majestic Silver Corp.",
+    "MAG":"MAG Silver Corp.",
+    "SVM":"Silvercorp Metals Inc.",
+    "EXK": "Endeavour Silver Corp.",
+    "FSM": "Fortuna Silver Mines Inc.",
+    "ASM": "Avino Silver & Gold Mines Ltd.",
+    "HL": "Hecla Mining Company",
+    "PAAS": "Pan American Silver Corp.",
+    "WPM": "Wheaton Precious Metals Corp."
+  }
+}
+
+
+
+
+     
+

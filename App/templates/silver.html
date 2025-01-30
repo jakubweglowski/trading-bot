@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ commodity }}</h1>
+
+    <div class="container">
+        <!-- Top Section: Graph & News -->
+        <div class="top-section">
+            <div class="plot">
+                <h2>Spot Price</h2>
+                <img src="{{ url_for('plot_commodity', commodity=commodity) }}" alt="Spot Price Chart">
+            </div>
+            <div class="news">
+                <h2>News</h2>
+                <ul>
+                    {% for item in news %}
+                        <li><a href="{{ item['link'] }}">{{ item['title'] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    
+        <!-- Bottom Section: Strategy Selection -->
+        <div class="strategies">
+            <h2>Select Strategy</h2>
+            <form method="get" action="{{ url_for('commodity', commodity=commodity) }}">
+                <label for="strategy">Choose a strategy:</label>
+                <select name="strategy" id="strategy">
+                    {% for strat in strategies %}
+                        <option value="{{ strat }}" {% if strat == selected_strategy %}selected{% endif %}>{{ strat }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Load</button>
+            </form>
+            
+            
+    
+            {% if strategy_data %}
+            <div class="strategy-content">
+                <h3>Strategy: {{ selected_strategy }}</h3>
+                <img src="{{ url_for('plot_strategy', commodity=commodity, strategy=selected_strategy) }}" alt="Strategy PNL Chart">
+                
+                <!-- ✅ Add Current Position Text -->
+                <h3>Current Position</h3>
+        
+                <table>
+                    <thead>
+                        <tr>
+                            {% for col in strategy_data[0].keys() %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in strategy_data %}
+                            <tr>
+                                {% for value in row.values() %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column; /* Keep everything stacked */
+            align-items: center;
+            width: 80%;
+            margin: auto;
+        }
+
+        /* Keep graph & news side by side */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            gap: 20px; /* Add space between chart and news */
+        }
+
+        .plot, .news {
+            width: 50%; /* Ensure both take equal space */
+            max-width: 600px; /* Prevent excessive stretching */
+        }
+
+        .strategy {
+            width: 100%;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+{% endblock %}
