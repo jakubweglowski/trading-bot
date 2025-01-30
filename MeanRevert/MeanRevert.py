@@ -110,9 +110,12 @@ class MeanRevert:
                       (self.data[self.price_col].shift() - self.data['rolling_mean'].shift() >= -self.data['rolling_std'].shift() * self.entry), 'signal'] = 1
 
         self.data['size'] = 1_000 / self.data[self.price_col]
+
+        return self.data
+    
     def getBacktest(self):
         backtest_df = backtest_strategy(self.data, self.price_col, 'sl', 'tp', 'signal', 'size')
-
+        return backtest_df
 
 
 
@@ -143,17 +146,18 @@ class MeanRevertPairs:
         self.data['sl'] = 0
         self.data['tp'] = 0
 
-        self.data.loc[abs(self.data[self.price_col] - self.data['rolling_mean']) < self.data['rolling_std'].shift() * self.tp, 'tp'] = 1
-        self.data.loc[abs(self.data[self.price_col] - self.data['rolling_mean']) > self.data['rolling_std'].shift() * self.sl, 'sl'] = 1
+        self.data.loc[abs(self.data['spread'] - self.data['rolling_mean']) < self.data['rolling_std'].shift() * self.tp, 'tp'] = 1
+        self.data.loc[abs(self.data['spread'] - self.data['rolling_mean']) > self.data['rolling_std'].shift() * self.sl, 'sl'] = 1
 
-        self.data.loc[(self.data[self.price_col] - self.data['rolling_mean'] > self.data['rolling_std'] * self.entry) & 
-                      (self.data[self.price_col].shift() - self.data['rolling_mean'].shift() <= self.data['rolling_std'].shift() * self.entry), 'signal'] = -1
-        self.data.loc[(self.data[self.price_col] - self.data['rolling_mean'] < -self.data['rolling_std'] * self.entry) & 
-                      (self.data[self.price_col].shift() - self.data['rolling_mean'].shift() >= -self.data['rolling_std'].shift() * self.entry), 'signal'] = 1
+        self.data.loc[(self.data['spread'] - self.data['rolling_mean'] > self.data['rolling_std'] * self.entry) & 
+                      (self.data['spread'].shift() - self.data['rolling_mean'].shift() <= self.data['rolling_std'].shift() * self.entry), 'signal'] = -1
+        self.data.loc[(self.data['spread'] - self.data['rolling_mean'] < -self.data['rolling_std'] * self.entry) & 
+                      (self.data['spread'].shift() - self.data['rolling_mean'].shift() >= -self.data['rolling_std'].shift() * self.entry), 'signal'] = 1
 
-        self.data['size_1'] = 1_000 / self.data[self.price_col] / self.data['spread']
+        self.data['size'] = 1_000 / self.data[self.price_col] / self.data['spread']
         self.data['size_2'] = 1_000 / self.data[self.price_col]
-
+        return self.data
+    
     def getBacktest(self):
         trades = []  
         position = None 
@@ -170,7 +174,7 @@ class MeanRevertPairs:
             current_size_2 = self.data.loc[self.data.index[i], 'size_2']
 
             current_price = self.data.loc[self.data.index[i], self.price_col]
-            current_price_2 = self.data.loc[self.data.index[i], self.price_col_2]
+            current_price_2 = self.data.loc[self.data.index[i], self.price_col2]
 
 
             if position == 'long':
