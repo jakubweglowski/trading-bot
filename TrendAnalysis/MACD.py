@@ -15,8 +15,6 @@ class MACD:
         self.long_window = long_window
         self.signal_window = signal_window
         self.alpha_EMA = alpha_EMA
-        
-        self.decision = self.Decision()
      
     def BaseLine(self) -> pd.DataFrame:
         bl = self.data.rolling(self.short_window)\
