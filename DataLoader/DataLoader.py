@@ -1,17 +1,6 @@
 import pandas as pd
 from datetime import datetime as dt, timedelta as tmd
-
-period_dict = {
-    '1min': 1,
-    '5min': 5,
-    '15min': 15,
-    '30min': 30,
-    '1h': 60,
-    '4h': 240,
-    '1D': 1440,
-    '1W': 10080,
-    '1M': 43200
-}
+from TechFunctions.Technicalities import XTB_to_pandas, period_dict
 
 from DataLoader.xAPIConnector import *
 
@@ -48,14 +37,14 @@ class DataLoader:
                 symbols: list[str],
                 start_date: str,
                 end_date: str | None = None,
-                interval: str = '1min',
+                interval: str = '1D',
                 verbose: bool = True):
         
         finalData = {}
         
-        end_date = (dt.strptime(end_date, '%Y-%m-%d %H:%M:%S') if end_date is not None else dt.now())
+        end_date = (dt.strptime(end_date, '%Y-%m-%d 00:00:00') if end_date is not None else dt.now())
         endUNIXTIME = int(dt.timestamp(end_date) * 1000)
-        start_date = dt.strptime(start_date, '%Y-%m-%d %H:%M:%S') + tmd(days=-1)
+        start_date = dt.strptime(start_date, '%Y-%m-%d 00:00:00') + tmd(days=-1)
         startUNIXTIME = int(dt.timestamp(start_date) * 1000)
         
         for symbol in symbols:
