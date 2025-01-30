@@ -4,29 +4,27 @@
     "AU" : "AngloGold Ashanti plc",
     "RGLD": "Royal Gold, Inc.",
     "CDE": "Coeur Mining, Inc.",
-    "SA": "Seabridge Gold Inc.",
-    "CMCL": "Caledonia Mining Corporation Plc",
-    "IDR" : "Idaho Strategic Resources, Inc.",
-    "CTGO" : "Contango Ore, Inc.",
-    "FTCO" : "Fortitude Gold Corporation",
-    "USAU" : "U.S. Gold Corp." 
+    "HYMC": "Hycroft Mining Holding Corporation",
+    "GOLD": "Barrick Gold",
+    "GFI": "Gold Fields",
+    "FCX": "Freeport-McMoRan"
 },
  "copper":{
-     "SCCO" :"Southern Copper Corporation",
-     "FCX" : "Freeport-McMoRan Inc.",
-     "MTAL" : "MAC Copper Limited",
-     "IE" : "Ivanhoe Electric Inc."
+    "SCCO" :"Southern Copper Corporation",
+    "FCX" : "Freeport-McMoRan Inc.",
+    "BHP": "BHP Group",
+    "RIO": "Rio Tinto",
+    "IE" : "Ivanhoe Electric Inc."
  },
  "aluminium":{
      "AA" :"Alcoa Corporation",
-     "CENX" : "Century Aluminum Company",
-     "CSTM" : "Constellium SE",
-     "KALU" : "Kaiser Aluminum Corporation"
+     "KALU" : "Kaiser Aluminum Corporation",
+     "BHP": "BHP Group",
+     "RIO": "Rio Tinto"
  },
   "silver":{
     "AG":"First Majestic Silver Corp.",
     "MAG":"MAG Silver Corp.",
-    "AYASF":"Aya Gold & Silver Inc.",
     "SVM":"Silvercorp Metals Inc.",
     "EXK": "Endeavour Silver Corp.",
     "FSM": "Fortuna Silver Mines Inc.",

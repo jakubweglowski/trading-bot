@@ -4,6 +4,7 @@ import numpy as np
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 from LSTM import LSTM
+from data_prepare import prepare_data_for_LSTM_training
 from data_prepare import prepare_data_for_LSTM
 
 class TimeSeriesDataset(Dataset):
@@ -18,7 +19,7 @@ class TimeSeriesDataset(Dataset):
         return self.X[i], self.y[i]
 
 
-class Exp:
+class LSTM_Exp:
     
 
     def __init__(self,input_size, hidden_size, num_stacked_layers,data,window,skip,split,
@@ -34,8 +35,9 @@ class Exp:
         self.num_epochs = num_epochs
         self.loss_function = nn.MSELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
+        self.window=window
         
-        X_train,y_train,X_test,y_test,self.scaler=prepare_data_for_LSTM(data,window,skip,split)
+        X_train,y_train,X_test,y_test,self.scaler=prepare_data_for_LSTM_training(data,window,skip,split)
         
         self.train_dataset = TimeSeriesDataset(X_train, y_train)
         self.test_dataset = TimeSeriesDataset(X_test, y_test)
@@ -97,7 +99,7 @@ class Exp:
         X_test=X_test[:,:,0]
         X_test=np.concatenate((srednie, X_test), axis=1)
         X_test=self.scaler.transform(X_test)
-        X_test=X_test.reshape(-1,self.window,1)
+        X_test=X_test.reshape(-1,self.window+1,1)
         X_test=X_test[:,1:,:]
         X_test=torch.Tensor(X_test)
         
@@ -122,4 +124,18 @@ class Exp:
                 sygnaly.append(0)
                 
         return sygnaly
+    
+    def Decision(self,data,granica,tytul=0):
+        czas=data.index
+        X=prepare_data_for_LSTM(data,self.window,skip=1)
+        X=X.reshape(-1,self.window,1)
+        
+        sygnaly=self.signaling(X,granica)
+        
+        df=pd.DataFrame({tytul:sygnaly})
+        df=df.set_index(czas[self.window-1:])
+        
+        return df
+
+        
         

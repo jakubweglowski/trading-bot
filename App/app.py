@@ -25,16 +25,13 @@ def commodity(commodity):
     except Exception as e:
         return f"Error reading data: {e}", 500
 
-    # Find available strategy files
     strategy_path = os.path.join('data', commodity)
     strategies = [f.split('.csv')[0] for f in os.listdir(strategy_path) if f.endswith('.csv') and f != 'spot_price.csv']
 
     news = news_data.get(commodity, [])
 
-    # ✅ Get selected strategy from query parameters
     selected_strategy = request.args.get('strategy')
 
-    # ✅ Load strategy data if selected
     strategy_data = []
     if selected_strategy and f"{selected_strategy}.csv" in os.listdir(strategy_path):
         try:
@@ -68,14 +65,11 @@ def strategy(commodity):
     except Exception as e:
         return f"Error reading strategy data: {e}", 500
 
-    # Show last 5 rows, handling missing columns
     tail_data = df.tail(5).fillna("N/A").to_dict('records')
 
-    # Find available strategies
     strategy_path = os.path.join('data', commodity)
     strategies = [f.split('.csv')[0] for f in os.listdir(strategy_path) if f.endswith('.csv') and f != 'spot_price.csv']
 
-    # **ADD NEWS HERE**
     news = news_data.get(commodity, [])
 
     return render_template('gold.html',
