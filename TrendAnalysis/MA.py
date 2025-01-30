@@ -5,8 +5,8 @@ from TechFunctions.Technicalities import position
 class MA:
     def __init__(self, 
                  data: pd.DataFrame, 
-                 short_window: int = 10, 
-                 long_window: int = 22,
+                 short_window: int = 12, 
+                 long_window: int = 26,
                  exponential: bool = True,
                  alpha_EMA: float = 0.1):
         self.data = data
