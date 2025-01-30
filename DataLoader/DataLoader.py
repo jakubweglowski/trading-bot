@@ -25,6 +25,8 @@ class DataLoader:
         
         self.client = None
         
+        self.data = None
+        
     def connect(self, verbose: bool = True):    
         self.client = APIClient()
         if verbose: print(f"[{dt.now()}] Loguję do API...")
@@ -34,18 +36,18 @@ class DataLoader:
         if verbose: print(f"[{dt.now()}] Wylogowuję z API...")
         self.client.disconnect()
         
-    def getData(self,
+    def downloadData(self,
                 symbols: list[str],
                 start_date: str,
                 end_date: str | None = None,
                 interval: str = '1D',
-                verbose: bool = True):
+                verbose: bool = True) -> pd.DataFrame:
         
         finalData = {}
         
-        end_date = (dt.strptime(end_date, '%Y-%m-%d 00:00:00') if end_date is not None else dt.now())
+        end_date = (dt.strptime(end_date, '%Y-%m-%d') if end_date is not None else dt.now())
         endUNIXTIME = int(dt.timestamp(end_date) * 1000)
-        start_date = dt.strptime(start_date, '%Y-%m-%d 00:00:00') + tmd(days=-1)
+        start_date = dt.strptime(start_date, '%Y-%m-%d') + tmd(days=-1)
         startUNIXTIME = int(dt.timestamp(start_date) * 1000)
         
         symbols.extend(materials)
@@ -80,4 +82,41 @@ class DataLoader:
         
             self.disconnect(verbose)
         
-        return pd.DataFrame(finalData)
+        self.data = pd.DataFrame(finalData)
+        
+    def getData(self,
+                symbols: list[str],
+                start_date: str,
+                end_date: str | None = None,
+                interval: str = '1D',
+                verbose: bool = True) -> pd.DataFrame:
+        self.downloadData(symbols=symbols,
+                          start_date=start_date,
+                          end_date=end_date,
+                          interval=interval,
+                          verbose=verbose)
+        return self.data
+
+    def saveData(self, filename: str):
+        self.data.to_csv('Data/'+filename+'.csv', index=True, header=True)
+        
+    def refreshData(self,
+                    filename: str,
+                    interval: str = '1D',
+                    verbose: bool = False):
+        data = pd.read_csv('Data/'+filename+'.csv', index_col='Date')
+        symbols = data.columns
+        last_date = data.index[-1]
+        today = dt.today().strftime("%Y-%m-%d")
+        if last_date == today:
+            print("Dane są aktualne i nie wymagają odświeżania.")
+        else:
+            new_data = self.getData(symbols=list(symbols),
+                                    start_date=last_date,
+                                    end_date=today,
+                                    interval=interval,
+                                    verbose=verbose).iloc[1:, :]
+            new_data.index = [x.strftime("%Y-%m-%d") for x in new_data.index]
+            data = pd.concat([data, new_data])
+            data = data.sort_index()
+            data.to_csv('Data/'+filename+'.csv', index=True, header=True)
