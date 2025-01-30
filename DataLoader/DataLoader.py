@@ -3,6 +3,9 @@ from datetime import datetime as dt, timedelta as tmd
 from TechFunctions.Technicalities import XTB_to_pandas, period_dict
 
 from DataLoader.xAPIConnector import *
+from Data.SymbolParser import parse_symbols
+
+materials = [key.upper() for key in parse_symbols().keys()]
 
 def XTB_to_pandas(response):
     data = pd.DataFrame.from_dict(response['returnData']['rateInfos'])
@@ -47,6 +50,7 @@ class DataLoader:
         start_date = dt.strptime(start_date, '%Y-%m-%d 00:00:00') + tmd(days=-1)
         startUNIXTIME = int(dt.timestamp(start_date) * 1000)
         
+        symbols.extend(materials)
         for symbol in symbols:
             
             self.connect(verbose)
